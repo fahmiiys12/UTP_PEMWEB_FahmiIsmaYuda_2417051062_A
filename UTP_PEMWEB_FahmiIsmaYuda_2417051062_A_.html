@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — Fahmi Isma Yuda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0a0f1e;
+      --bg2:       #0e1628;
+      --card:      #111827;
+      --orange:    #f97316;
+      --orange2:   #fb923c;
+      --orange-dim:#7c3100;
+      --text:      #e2e8f0;
+      --muted:     #94a3b8;
+      --border:    rgba(249,115,22,0.18);
+      --glow:      0 0 40px rgba(249,115,22,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+    #cursor {
+      width: 14px; height: 14px;
+      background: var(--orange);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .2s, height .2s, background .2s;
+      mix-blend-mode: screen;
+    }
+    #cursor.big { width: 42px; height: 42px; background: rgba(249,115,22,.35); }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: .6;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 4rem;
+      background: rgba(10,15,30,.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s;
+    }
+    nav.scrolled { padding: .6rem 4rem; }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem; font-weight: 800;
+      color: var(--orange);
+      letter-spacing: -1px;
+    }
+    .logo span { color: var(--text); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--muted); text-decoration: none;
+      font-size: .9rem; letter-spacing: .04em;
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0;
+      width: 0; height: 2px; background: var(--orange);
+      transition: width .3s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--orange); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta {
+      background: var(--orange); color: #fff;
+      border: none; padding: .5rem 1.4rem;
+      border-radius: 50px; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; font-size: .88rem;
+      cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(249,115,22,.4);
+    }
+    .nav-cta:hover { background: var(--orange2); transform: translateY(-2px); box-shadow: var(--glow); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--orange); border-radius: 2px; transition: .3s; }
+
+    #home {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(249,115,22,.12) 0%, transparent 70%),
+                  radial-gradient(ellipse 40% 40% at 20% 80%, rgba(249,115,22,.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 3rem;
+      position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(249,115,22,.12); border: 1px solid var(--border);
+      padding: .35rem 1rem; border-radius: 50px;
+      font-size: .8rem; color: var(--orange); letter-spacing: .06em;
+      margin-bottom: 1.4rem;
+    }
+    .hero-badge::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -2px;
+    }
+    .hero-title .highlight {
+      -webkit-text-stroke: 2px var(--orange);
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      margin-top: 1.2rem;
+      color: var(--muted); font-size: 1.05rem; line-height: 1.8;
+      max-width: 480px;
+    }
+    .hero-socials { display: flex; gap: 1rem; margin-top: 1.6rem; }
+    .social-icon {
+      width: 38px; height: 38px;
+      border: 1px solid var(--border); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: border-color .2s, color .2s, background .2s;
+      text-decoration: none; font-size: .85rem;
+    }
+    .social-icon:hover { border-color: var(--orange); color: var(--orange); background: rgba(249,115,22,.08); }
+    .hero-btns { display: flex; gap: 1rem; margin-top: 2.4rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--orange); color: #fff; border: none;
+      padding: .75rem 2rem; border-radius: 50px; font-weight: 600;
+      cursor: pointer; font-size: .95rem; display: flex; align-items: center; gap: .5rem;
+      box-shadow: 0 4px 24px rgba(249,115,22,.4);
+      transition: transform .15s, box-shadow .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,.15); padding: .75rem 2rem;
+      border-radius: 50px; font-weight: 500; font-size: .95rem;
+      cursor: pointer; display: flex; align-items: center; gap: .5rem;
+      transition: border-color .2s, color .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+    .hero-img-wrap {
+      position: relative; display: flex; justify-content: center; align-items: center;
+    }
+    .hero-img-bg {
+      width: 360px; height: 360px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(249,115,22,.2) 0%, transparent 70%);
+      position: relative;
+      border: 2px dashed rgba(249,115,22,.3);
+      display: flex; align-items: center; justify-content: center;
+      animation: spin-slow 20s linear infinite;
+    }
+    @keyframes spin-slow { to { transform: rotate(360deg); } }
+    .hero-img-inner {
+      width: 300px; height: 300px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--card) 0%, rgba(249,115,22,.1) 100%);
+      border: 3px solid rgba(249,115,22,.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 7rem;
+      animation: counter-spin 20s linear infinite;
+      box-shadow: 0 0 60px rgba(249,115,22,.2);
+    }
+    @keyframes counter-spin { to { transform: rotate(-360deg); } }
+    .orbit-dot {
+      position: absolute; width: 12px; height: 12px;
+      border-radius: 50%; background: var(--orange);
+      box-shadow: 0 0 10px var(--orange);
+    }
+    .orbit-dot:nth-child(1) { top: 10px; left: 50%; transform: translateX(-50%); }
+    .orbit-dot:nth-child(2) { bottom: 10px; right: 30px; }
+    .orbit-dot:nth-child(3) { left: 10px; top: 50%; transform: translateY(-50%); }
+
+    .hero-stats {
+      grid-column: 1 / -1;
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem; margin-top: 1rem;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: .25rem; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--orange); }
+    .stat-label { font-size: .82rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+
+    section { padding: 6rem 4rem; position: relative; }
+    .section-label {
+      font-size: .78rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--orange); font-weight: 600; margin-bottom: .8rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3.5vw, 3rem);
+      font-weight: 800; line-height: 1.15; letter-spacing: -1px;
+    }
+    .section-title .dim { color: var(--muted); }
+    .section-sub { color: var(--muted); margin-top: .8rem; max-width: 500px; line-height: 1.8; }
+    
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 5rem; align-items: center;
+      max-width: 1200px; margin: 3rem auto 0;
+    }
+    .about-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 2.5rem;
+      position: relative; overflow: hidden;
+    }
+    .about-card::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 150px; height: 150px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(249,115,22,.15) 0%, transparent 70%);
+    }
+    .about-avatar {
+      width: 90px; height: 90px; border-radius: 20px;
+      background: linear-gradient(135deg, rgba(249,115,22,.3), rgba(249,115,22,.05));
+      border: 2px solid rgba(249,115,22,.4); font-size: 2.8rem;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.4rem;
+    }
+    .about-name { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+    .about-role { color: var(--orange); font-size: .9rem; margin-top: .3rem; }
+    .about-bio { color: var(--muted); line-height: 1.9; margin-top: 1.2rem; font-size: .95rem; }
+    .about-tags { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.4rem; }
+    .tag {
+      background: rgba(249,115,22,.1); border: 1px solid var(--border);
+      color: var(--orange); font-size: .78rem; padding: .3rem .8rem;
+      border-radius: 50px; letter-spacing: .04em;
+    }
+    .mini-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .mini-stat {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.4rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .mini-stat:hover { border-color: var(--orange); transform: translateY(-4px); }
+    .mini-stat .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--orange); }
+    .mini-stat .lbl { color: var(--muted); font-size: .82rem; margin-top: .3rem; }
+    #skills { background: var(--bg); }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem; max-width: 1200px; margin: 3rem auto 0;
+    }
+    .skill-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.6rem;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+    }
+    .skill-card:hover { border-color: var(--orange); transform: translateY(-6px); box-shadow: var(--glow); }
+    .skill-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .skill-icon { font-size: 1.6rem; }
+    .skill-pct { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--orange); }
+    .skill-name { font-weight: 600; margin-bottom: .7rem; }
+    .progress-bar {
+      height: 6px; background: rgba(255,255,255,.07); border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--orange-dim), var(--orange));
+      width: 0%; transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    #projects { background: var(--bg2); }
+    .filter-tabs { display: flex; gap: .7rem; flex-wrap: wrap; margin: 2.5rem 0 2rem; }
+    .tab-btn {
+      padding: .45rem 1.3rem; border-radius: 50px; font-size: .88rem;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      cursor: pointer; transition: .2s; font-family: 'DM Sans', sans-serif;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem; max-width: 1200px; margin: 0 auto;
+    }
+    .project-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+    }
+    .project-card:hover { border-color: var(--orange); transform: translateY(-6px); box-shadow: var(--glow); }
+    .project-card[data-hidden="true"] { display: none; }
+    .project-thumb {
+      width: 100%; height: 180px;
+      background: linear-gradient(135deg, rgba(249,115,22,.15) 0%, rgba(10,15,30,.8) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; position: relative; overflow: hidden;
+    }
+    .project-thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, var(--card));
+    }
+    .project-body { padding: 1.4rem; }
+    .project-cats { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .8rem; }
+    .cat-badge {
+      font-size: .72rem; padding: .25rem .7rem; border-radius: 50px;
+      background: rgba(249,115,22,.1); color: var(--orange);
+      border: 1px solid var(--border); letter-spacing: .04em;
+    }
+    .project-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .project-desc { color: var(--muted); font-size: .88rem; line-height: 1.7; margin-bottom: 1.2rem; }
+    .project-links { display: flex; gap: .7rem; }
+    .link-btn {
+      font-size: .82rem; padding: .4rem 1rem; border-radius: 50px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: none;
+      transition: .2s; display: flex; align-items: center; gap: .4rem;
+    }
+    .link-btn.demo { background: var(--orange); color: #fff; border: none; }
+    .link-btn.demo:hover { background: var(--orange2); }
+    .link-btn.code { border: 1px solid var(--border); background: transparent; color: var(--muted); }
+    .link-btn.code:hover { border-color: var(--orange); color: var(--orange); }
+    #contact { background: var(--bg); }
+    .contact-wrap {
+      display: grid; grid-template-columns: 1fr 1.2fr;
+      gap: 5rem; max-width: 1200px; margin: 3rem auto 0;
+      align-items: start;
+    }
+    .contact-info p { color: var(--muted); line-height: 1.9; margin-top: 1rem; margin-bottom: 2rem; }
+    .contact-detail {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem; background: var(--card);
+      border: 1px solid var(--border); border-radius: 14px;
+      margin-bottom: .8rem; transition: border-color .2s;
+    }
+    .contact-detail:hover { border-color: var(--orange); }
+    .contact-detail .icon { font-size: 1.3rem; }
+    .contact-detail .cd-label { font-size: .75rem; color: var(--muted); }
+    .contact-detail .cd-val { font-size: .9rem; font-weight: 500; color: var(--text); }
+    .form-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; padding: 2.5rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1.2rem; }
+    .form-group label { font-size: .82rem; color: var(--muted); letter-spacing: .05em; }
+    .form-group input, .form-group textarea, .form-group select {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: .95rem; padding: .75rem 1rem;
+      outline: none; resize: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(249,115,22,.15);
+    }
+    .form-group input.error, .form-group textarea.error { border-color: #f87171; }
+    .err-msg { font-size: .78rem; color: #f87171; margin-top: .3rem; display: none; }
+    .err-msg.show { display: block; }
+    .form-group textarea { height: 120px; }
+    .form-submit {
+      width: 100%; padding: .85rem; border-radius: 50px;
+      background: var(--orange); color: #fff; font-size: 1rem;
+      font-weight: 600; font-family: 'DM Sans', sans-serif;
+      border: none; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(249,115,22,.4);
+      transition: transform .15s, box-shadow .2s;
+    }
+    .form-submit:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+    .form-success {
+      display: none; text-align: center; padding: 2rem;
+      color: var(--orange); font-family: 'Syne', sans-serif;
+      font-size: 1.3rem; font-weight: 700;
+    }
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer .logo { font-size: 1.2rem; }
+    footer p { color: var(--muted); font-size: .85rem; }
+    #scrollTop {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--orange); border: none; color: #fff;
+      font-size: 1.2rem; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(249,115,22,.5);
+      display: none; align-items: center; justify-content: center;
+      transition: transform .2s;
+    }
+    #scrollTop.show { display: flex; }
+    #scrollTop:hover { transform: translateY(-3px); }
+    .toast {
+      position: fixed; bottom: 6rem; right: 2rem; z-index: 300;
+      background: var(--card); border: 1px solid var(--orange);
+      color: var(--text); padding: 1rem 1.5rem;
+      border-radius: 14px; font-size: .9rem;
+      box-shadow: var(--glow); opacity: 0;
+      transform: translateY(10px); transition: .3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .fade-in {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      nav.scrolled { padding: .6rem 1.5rem; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; background: rgba(10,15,30,.97);
+        padding: 1.5rem; gap: 1.2rem; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .nav-cta { display: none; }
+      #home { padding: 7rem 1.5rem 3rem; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; }
+      .hero-img-wrap { display: none; }
+      .hero-stats { justify-content: center; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid, .contact-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+    }
+    .typed-cursor { color: var(--orange); animation: blink 1s infinite; }
+  </style>
+</head>
+<body>
+<div id="cursor"></div>
+<div class="toast" id="toast">✅ Pesan berhasil dikirim!</div>
+
+<button id="scrollTop" title="Kembali ke atas">↑</button>
+<nav id="navbar">
+  <div class="logo">MIIYU<span>.dev</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">Hire Me →</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-badge">🟢 Open to Work</div>
+      <h1 class="hero-title">
+        Hi, I'm <br>
+        <span class="highlight" id="typedName">Fahmi Isma Yuda</span><br>
+        <span id="typedRole">Web Developer</span>
+      </h1>
+      <p class="hero-sub">Mahasiswa Ilmu Komputer FMIPA Universitas Lampung yang antusias dalam eksplorasi teknologi, logika pemrograman, dan pengembangan solusi digital. Berdomisili di Rajabasa, Bandar Lampung.</p>
+      <div class="hero-socials">
+        <a href="https://github.com/fahmiiys12" class="social-icon" title="gitHub" id="githubLink">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.83 1.23 1.83 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.005 2.04.138 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <a href="www.linkedin.com/in/fahmi-isma-ys-3b4490403 " class="social-icon" title="LinkedIn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.73V1.73C24 .77 23.21 0 22.23 0z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/miiiiyuuu?igsh=MW5qb2did20wcnJxdA==" class="social-icon" title="Instagram">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://youtube.com/@fahmiismays156?si=Iavaq2VI5dVwUEMR" class="social-icon" title="YouTube">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.03 0 12 0 12s0 3.97.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.97 24 12 24 12s0-3.97-.5-5.81zM9.75 15.5V8.5l6.5 3.5-6.5 3.5z"/></svg>
+        </a>
+      </div>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="downloadCV()">⬇ Download CV</button>
+        <button class="btn-outline" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">✉ Contact Me</button>
+      </div>
+    </div>
+    <div class="hero-img-wrap">
+      <div class="hero-img-bg">
+        <div class="orbit-dot"></div>
+        <div class="orbit-dot"></div>
+        <div class="orbit-dot"></div>
+        <div class="hero-img-inner" id="heroImgInner">
+          <img src="foto.jpg.png" alt="Fahmi Isma Yuda"
+               onerror="this.style.display='none';document.getElementById('heroEmoji').style.display='flex';"
+               style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;">
+          <span id="heroEmoji" style="display:none;font-size:7rem;align-items:center;justify-content:center;width:100%;height:100%;">🧑‍💻</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats fade-in">
+      <div class="stat-item">
+        <span class="stat-num" data-count="2">0</span>
+        <span class="stat-label">Tahun Belajar Coding</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="4">0</span>
+        <span class="stat-label">Semester Ditempuh</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="4">0</span>
+        <span class="stat-label">+ Teknologi Dipelajari</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="2024">0</span>
+        <span class="stat-label">Angkatan</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div style="max-width:1200px;margin:0 auto">
+    <p class="section-label fade-in">Tentang Saya</p>
+    <h2 class="section-title fade-in">Kenali <span class="dim">lebih dekat</span></h2>
+    <div class="about-grid">
+      <div class="about-card fade-in">
+       
+        <div class="about-avatar" style="overflow:hidden;padding:0;" id="aboutAvatarWrap">
+          <img src="foto.jpg.png" alt="Fahmi Isma Yuda"
+               onerror="this.style.display='none';document.getElementById('aboutAvatarEmoji').style.display='flex';"
+               style="width:100%;height:100%;object-fit:cover;border-radius:18px;">
+          <span id="aboutAvatarEmoji" style="display:none;font-size:2.8rem;width:100%;height:100%;align-items:center;justify-content:center;">🧑‍💻</span>
+        </div>
+        <div class="about-name">Fahmi Isma Yuda</div>
+        <div class="about-role">Mahasiswa Ilmu Komputer · Universitas Lampung</div>
+        <p class="about-bio">
+          Mahasiswa Ilmu Komputer (FMIPA) di Universitas Lampung angkatan 2024 yang saat ini sedang menempuh semester 4. Memiliki minat besar dalam eksplorasi teknologi, logika pemrograman, dan pengembangan solusi digital.
+          <br><br>
+          Berdomisili di Rajabasa, saya adalah pribadi yang disiplin, pembelajar cepat, dan siap mengaplikasikan ilmu akademik ke dalam proyek nyata maupun kolaborasi tim.
+        </p>
+        <div class="about-tags">
+          <span class="tag">HTML5</span>
+          <span class="tag">CSS3</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">C++</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">Git</span>
+        </div>
+      </div>
+      <div class="fade-in">
+        <div class="mini-stat-grid">
+          <div class="mini-stat">
+            <div class="num">2024</div>
+            <div class="lbl">Angkatan Masuk Unila</div>
+          </div>
+          <div class="mini-stat">
+            <div class="num">4</div>
+            <div class="lbl">Semester yang sedang ditempuh</div>
+          </div>
+          <div class="mini-stat">
+            <div class="num">4+</div>
+            <div class="lbl">Teknologi yang dipelajari</div>
+          </div>
+          <div class="mini-stat">
+            <div class="num">100%</div>
+            <div class="lbl">Semangat belajar & berkembang</div>
+          </div>
+        </div>
+        <div style="margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.8rem;">
+          <h3 style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:1.2rem;">Pendidikan & Pengalaman</h3>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px;"></div>
+              <div>
+                <div style="font-weight:600;font-size:.95rem;">S1 Ilmu Komputer (FMIPA)</div>
+                <div style="color:var(--muted);font-size:.82rem;">Universitas Lampung — 2024 – Sekarang (Sem. 4)</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:10px;height:10px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px;"></div>
+              <div>
+                <div style="font-weight:600;font-size:.95rem;">Aktif Mengeksplorasi Web Development</div>
+                <div style="color:var(--muted);font-size:.82rem;">Self-learning & proyek mandiri — 2024 – Sekarang</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start;">
+              <div style="width:10px;height:10px;border-radius:50%;background:rgba(249,115,22,.35);flex-shrink:0;margin-top:5px;"></div>
+              <div>
+                <div style="font-weight:600;font-size:.95rem;">Berdomisili di Rajabasa, Bandar Lampung</div>
+                <div style="color:var(--muted);font-size:.82rem;">Siap kolaborasi & proyek nyata 🚀</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="skills">
+  <div style="max-width:1200px;margin:0 auto">
+    <p class="section-label fade-in">Keahlian</p>
+    <h2 class="section-title fade-in">Teknologi yang <span class="dim">saya kuasai</span></h2>
+    <p class="section-sub fade-in">Tools and technologies I work with to craft amazing web experiences.</p>
+    <div class="skills-grid" id="skillsGrid">
+    </div>
+  </div>
+</section>
+<section id="projects">
+  <div style="max-width:1200px;margin:0 auto">
+    <p class="section-label fade-in">Portofolio</p>
+    <h2 class="section-title fade-in">Proyek <span class="dim">terbaru saya</span></h2>
+    <div class="filter-tabs fade-in" id="filterTabs">
+      <button class="tab-btn active" data-filter="all">Semua</button>
+      <button class="tab-btn" data-filter="web">Web App</button>
+      <button class="tab-btn" data-filter="ui">UI/UX</button>
+      <button class="tab-btn" data-filter="fullstack">Full Stack</button>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+    </div>
+  </div>
+</section>
+<section id="contact">
+  <div style="max-width:1200px;margin:0 auto">
+    <p class="section-label fade-in">Hubungi Saya</p>
+    <h2 class="section-title fade-in">Get In <span class="dim">Touch</span></h2>
+    <div class="contact-wrap">
+      <div class="contact-info fade-in">
+        <p>Punya proyek keren atau ingin berkolaborasi? Jangan ragu untuk menghubungi saya. Saya selalu senang berdiskusi tentang ide-ide baru!</p>
+        <div class="contact-detail">
+          <span class="icon">📧</span>
+          <div>
+            <div class="cd-label">Email</div>
+            <div class="cd-val"><a href="/cdn-cgi/l/fahmiismayuda@gmail.com-protection" class="__cf_fahmiismayuda@gmail.com_" data-cfemail="9df3fcf0fcddf8f0fcf4f1b3fef2f0">[email&#160;protected]</a></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">📱</span>
+          <div>
+            <div class="cd-label">https://wa.me/qr/7Z5OJO6CVYV3D1</div>
+            <div class="cd-val">+62 895-1839-5222</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">📍</span>
+          <div>
+            <div class="cd-label">Lokasi</div>
+            <div class="cd-val">Bandar Lampung, Indonesia</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">🐙</span>
+          <div>
+            <div class="cd-label">GitHub</div>
+            <div class="cd-val"><a href="https://github.com/fahmiiys12-github-kamu" target="_blank" id="githubContactLink" style="color:var(--orange);text-decoration:none;">github.com/fahmiiys12-github-kamu</a></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">🕒</span>
+          <div>
+            <div class="cd-label">Status</div>
+            <div class="cd-val" style="color:var(--orange);">🟢 Open to Work / Kolaborasi</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card fade-in">
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nama Depan *</label>
+              <input type="text" id="firstName" placeholder="Fahmi" />
+              <span class="err-msg" id="firstNameErr">Nama depan wajib diisi</span>
+            </div>
+            <div class="form-group">
+              <label>Nama Belakang *</label>
+              <input type="text" id="lastName" placeholder="Yuda" />
+              <span class="err-msg" id="lastNameErr">Nama belakang wajib diisi</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="email" placeholder="fahmiismayuda@email.com" />
+            <span class="err-msg" id="emailErr">Email tidak valid</span>
+          </div>
+          <div class="form-group">
+            <label>Nomor HP</label>
+            <input type="tel" id="phone" placeholder="+62 895-1839-5222" />
+          </div>
+          <div class="form-group">
+            <label>Subjek *</label>
+            <select id="subject">
+              <option value="">-- Pilih Subjek --</option>
+              <option value="project">Kolaborasi Proyek</option>
+              <option value="freelance">Jasa Freelance</option>
+              <option value="other">Lainnya</option>
+            </select>
+            <span class="err-msg" id="subjectErr">Pilih subjek terlebih dahulu</span>
+          </div>
+          <div class="form-group">
+            <label>Pesan *</label>
+            <textarea id="message" placeholder="Ceritakan projekmu di sini..."></textarea>
+            <span class="err-msg" id="messageErr">Pesan wajib diisi (min. 10 karakter)</span>
+          </div>
+          <button type="submit" class="form-submit">Kirim Pesan →</button>
+          <div class="form-success" id="formSuccess">
+            🎉 Terima kasih! Pesan kamu sudah terkirim.<br>
+            <span style="font-size:.9rem;font-family:'DM Sans',sans-serif;color:var(--muted);font-weight:400;">Saya akan membalas secepatnya.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="logo">MIIYU<span>.dev</span></div>
+  <p>© 2025 Fahmi Isma Yuda — Dibuat dengan menggunakan HTML, CSS & JS</p>
+  <div style="display:flex;gap:.8rem;">
+    <a href="#home" style="color:var(--muted);font-size:.85rem;text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">Home</a>
+    <a href="#about" style="color:var(--muted);font-size:.85rem;text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">About</a>
+    <a href="#projects" style="color:var(--muted);font-size:.85rem;text-decoration:none;transition:.2s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--muted)'">Projects</a>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.skill-card,.project-card,.mini-stat,.contact-detail').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+const navbar = document.getElementById('navbar');
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 400);
+
+  let current = '';
+  sections.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 200) current = sec.getAttribute('id');
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+
+document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+const roles = ['Web Developer', 'UI Designer', 'Problem Solver', 'Frontend Engineer'];
+let ri = 0, ci = 0, del = false;
+const el = document.getElementById('typedRole');
+function type() {
+  const word = roles[ri];
+  if (!del) {
+    el.textContent = word.slice(0, ++ci);
+    if (ci === word.length) { del = true; setTimeout(type, 1800); return; }
+  } else {
+    el.textContent = word.slice(0, --ci);
+    if (ci === 0) { del = false; ri = (ri + 1) % roles.length; }
+  }
+  setTimeout(type, del ? 60 : 100);
+}
+type();
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+const countIo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const end = +el.dataset.count;
+    let cur = 0;
+    const step = Math.ceil(end / 40);
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, end);
+      el.textContent = cur;
+      if (cur >= end) clearInterval(t);
+    }, 40);
+    countIo.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-count]').forEach(el => countIo.observe(el));
+const skills = [
+  { name: 'HTML5 & CSS3', icon: '🌐', pct: 92 },
+  { name: 'JavaScript', icon: '⚡', pct: 85 },
+  { name: 'C++', icon: '💻', pct: 75 },
+  { name: 'Node.js', icon: '🟩', pct: 68 },
+  { name: 'Git & GitHub', icon: '🐙', pct: 82 },
+  { name: 'Python', icon: '🐍', pct: 60 },
+];
+const sg = document.getElementById('skillsGrid');
+skills.forEach(s => {
+  sg.innerHTML += `
+    <div class="skill-card fade-in">
+      <div class="skill-header">
+        <span class="skill-icon">${s.icon}</span>
+        <span class="skill-pct">${s.pct}%</span>
+      </div>
+      <div class="skill-name">${s.name}</div>
+      <div class="progress-bar"><div class="progress-fill" data-pct="${s.pct}"></div></div>
+    </div>`;
+});
+const barIo = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.progress-fill').forEach(b => {
+      b.style.width = b.dataset.pct + '%';
+    });
+    barIo.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.skill-card').forEach(c => barIo.observe(c));
+setTimeout(() => {
+  document.querySelectorAll('.skill-card').forEach(c => { barIo.observe(c); io.observe(c); });
+}, 100);
+const projects = [
+  { emoji:'🛒', title:'Platform Top Up Game', desc:'Toko online lengkap dengan fitur keranjang belanja, payment gateway, dan manajemen produk.', cats:['web','fullstack'], catLabels:['Web App','Full Stack'] },
+  { emoji:'💪', title:'Grow well App', desc:'Aplikasi Pemantau tumbuh kembang balita, reminder, dan integrasi kesehatan.', cats:['web','ui'], catLabels:['Web App','UI/UX'] },
+  { emoji:'📊', title:'Dashboard Jadwal Mata Kuliah', desc:'Dashboard untuk melihat jadwal kuliah dan jadwal kegiatan agar tidak tabrakan.', cats:['web'], catLabels:['Web App'] },
+  { emoji:'✅', title:'Present App', desc:'Aplikasi Absensi dengan fitur drag-and-drop, kolaborasi tim, dan tracking deadline.', cats:['ui','fullstack'], catLabels:['UI/UX','Full Stack'] },
+];
+const pg = document.getElementById('projectsGrid');
+projects.forEach(p => {
+  pg.innerHTML += `
+    <div class="project-card fade-in" data-cats='${JSON.stringify(p.cats)}'>
+      <div class="project-thumb">${p.emoji}</div>
+      <div class="project-body">
+        <div class="project-cats">${p.catLabels.map(l=>`<span class="cat-badge">${l}</span>`).join('')}</div>
+        <div class="project-title">${p.title}</div>
+        <p class="project-desc">${p.desc}</p>
+        <div class="project-links">
+          <a href="#" class="link-btn demo">▶ Live Demo</a>
+          <a href="#" class="link-btn code">⌥ Code</a>
+        </div>
+      </div>
+    </div>`;
+});
+setTimeout(() => {
+  document.querySelectorAll('.project-card').forEach(c => io.observe(c));
+}, 100);
+document.getElementById('filterTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filter = btn.dataset.filter;
+  document.querySelectorAll('.project-card').forEach(card => {
+    const cats = JSON.parse(card.dataset.cats);
+    const show = filter === 'all' || cats.includes(filter);
+    card.style.display = show ? 'block' : 'none';
+  });
+});
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+
+  const fields = [
+    { id:'firstName', errId:'firstNameErr', check: v => v.trim().length > 0 },
+    { id:'lastName',  errId:'lastNameErr',  check: v => v.trim().length > 0 },
+    { id:'email',     errId:'emailErr',     check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id:'subject',   errId:'subjectErr',   check: v => v !== '' },
+    { id:'message',   errId:'messageErr',   check: v => v.trim().length >= 10 },
+  ];
+
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const err = document.getElementById(f.errId);
+    if (!f.check(el.value)) {
+      el.classList.add('error');
+      err.classList.add('show');
+      valid = false;
+    } else {
+      el.classList.remove('error');
+      err.classList.remove('show');
+    }
+  });
+
+  if (valid) {
+    this.style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+    showToast('✅ Pesan berhasil dikirim!');
+  }
+});
+['firstName','lastName','email','subject','message'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => {
+    el.classList.remove('error');
+    document.getElementById(id+'Err').classList.remove('show');
+  });
+});
+function downloadCV() {
+  showToast('📄 CV akan segera tersedia!');
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
